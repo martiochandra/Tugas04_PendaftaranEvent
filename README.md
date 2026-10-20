@@ -1,7 +1,7 @@
 # Form Pendaftaran Event (Tugas 4 Compose State)
 
 **Nama:** Martio Chandra  
-**NIM:** 010252  
+**NIM:** 0102524723  
 **Program Studi:** Informatika, Universitas Al Azhar Indonesia  
 
 ## Deskripsi Aplikasi
