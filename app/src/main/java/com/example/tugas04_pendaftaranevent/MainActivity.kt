@@ -100,23 +100,33 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
             )
         }
 
-        // 4. Area Komponen Counter Tiket (Interaktif dengan batas minimal 1)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Jumlah Tiket:", style = MaterialTheme.typography.bodyLarge)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // Tombol minus tidak bisa mengurangi di bawah 1
-                Button(onClick = { if (jumlahTiket > 1) jumlahTiket-- }) { Text("-") }
 
-                Text(text = jumlahTiket.toString(), modifier = Modifier.padding(horizontal = 16.dp))
+
+        // 4. Area Komponen Counter Tiket (Interaktif dengan batas minimal 1)
+        //Row(
+        //    modifier = Modifier.fillMaxWidth(),
+         //   verticalAlignment = Alignment.CenterVertically,
+         //   horizontalArrangement = Arrangement.SpaceBetween
+       // ) {
+         //   Text(text = "Jumlah Tiket:", style = MaterialTheme.typography.bodyLarge)
+          //  Row(verticalAlignment = Alignment.CenterVertically) {
+                // Tombol minus tidak bisa mengurangi di bawah 1
+           //     Button(onClick = { if (jumlahTiket > 1) jumlahTiket-- }) { Text("-") }
+
+           //     Text(text = jumlahTiket.toString(), modifier = Modifier.padding(horizontal = 16.dp))
 
                 // Tombol plus
-                Button(onClick = { jumlahTiket++ }) { Text("+") }
-            }
-        }
+            //    Button(onClick = { jumlahTiket++ }) { Text("+") }
+          //  }
+       // }
+
+        // --- IMPLEMENTASI STATE HOISTING ---
+        // Kita memanggil komponen TicketCounter yang baru dibuat di bawah.
+        // Kita mengirimkan nilai (jumlahTiket) dan aksi/event ketika tombol diklik (it)
+        TicketCounter(
+            tiket = jumlahTiket,
+            onTiketChange = { jumlahTiket = it }
+        )
 
         if (pesanFeedback.isNotEmpty()) {
             Text(
@@ -156,6 +166,31 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
             ) {
                 Text("Daftar")
             }
+        }
+    }
+}
+
+// ==============================================================
+// KOMPONEN STATELESS (Hasil State Hoisting Hari 5)
+// ==============================================================
+@Composable
+fun TicketCounter(
+    tiket: Int, // Menerima nilai dari luar
+    onTiketChange: (Int) -> Unit, // Menerima aksi/callback dari luar
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "Jumlah Tiket:", style = MaterialTheme.typography.bodyLarge)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // Ketika tombol diklik, komponen ini tidak mengubah angka secara langsung,
+            // melainkan "melapor" ke komponen induknya lewat onTiketChange.
+            Button(onClick = { if (tiket > 1) onTiketChange(tiket - 1) }) { Text("-") }
+            Text(text = tiket.toString(), modifier = Modifier.padding(horizontal = 16.dp))
+            Button(onClick = { onTiketChange(tiket + 1) }) { Text("+") }
         }
     }
 }
