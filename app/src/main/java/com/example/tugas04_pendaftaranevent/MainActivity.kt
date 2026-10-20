@@ -1,5 +1,6 @@
 package com.example.tugas04_pendaftaranevent // Sesuaikan dengan package Anda!
 
+import androidx.compose.runtime.saveable.rememberSaveable
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,13 +41,13 @@ class MainActivity : ComponentActivity() {
 fun EventRegistrationScreen(modifier: Modifier = Modifier) {
     // --- DEKLARASI STATE (HARI 3) ---
     // Menyimpan nilai yang diketik/dipilih oleh user
-    var namaPeserta by remember { mutableStateOf("") }
-    var emailPeserta by remember { mutableStateOf("") }
-    var aksesVIP by remember { mutableStateOf(false) }
-    var jumlahTiket by remember { mutableIntStateOf(1) }
+    var namaPeserta by rememberSaveable { mutableStateOf("") }
+    var emailPeserta by rememberSaveable { mutableStateOf("") }
+    var aksesVIP by rememberSaveable { mutableStateOf(false) }
+    var jumlahTiket by rememberSaveable { mutableIntStateOf(1) }
 
     // --- STATE HARI 4 (Feedback Pendaftaran) ---
-    var pesanFeedback by remember { mutableStateOf("") }
+    var pesanFeedback by rememberSaveable { mutableStateOf("") }
 
     // --- LOGIKA VALIDASI HARI 4 ---
     // Tombol hanya aktif jika nama tidak kosong DAN email mengandung '@'
