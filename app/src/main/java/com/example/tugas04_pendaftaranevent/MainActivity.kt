@@ -12,6 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.example.tugas04_pendaftaranevent.ui.theme.Tugas04_PendaftaranEventTheme // Sesuaikan tema
 
 class MainActivity : ComponentActivity() {
@@ -33,6 +38,13 @@ class MainActivity : ComponentActivity() {
 // ==============================================================
 @Composable
 fun EventRegistrationScreen(modifier: Modifier = Modifier) {
+    // --- DEKLARASI STATE (HARI 3) ---
+    // Menyimpan nilai yang diketik/dipilih oleh user
+    var namaPeserta by remember { mutableStateOf("") }
+    var emailPeserta by remember { mutableStateOf("") }
+    var aksesVIP by remember { mutableStateOf(false) }
+    var jumlahTiket by remember { mutableIntStateOf(1) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -46,34 +58,37 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
-        Divider()
+        HorizontalDivider()
 
-        // 2. Input Teks (Statis untuk saat ini)
+        // 2. Input Teks (Sekarang Interaktif membaca & mengubah State)
         OutlinedTextField(
-            value = "",
-            onValueChange = { },
+            value = namaPeserta,
+            onValueChange = { namaPeserta = it },
             label = { Text("Nama Lengkap") },
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
-            value = "",
-            onValueChange = { },
+            value = emailPeserta,
+            onValueChange = { emailPeserta = it },
             label = { Text("Alamat Email") },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // 3. Area Switch (Akses VIP) - Statis
+        // 3. Area Switch VIP (Interaktif)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Daftar sebagai VIP (Akses Lounge)", style = MaterialTheme.typography.bodyLarge)
-            Switch(checked = false, onCheckedChange = { })
+            Switch(
+                checked = aksesVIP,
+                onCheckedChange = { aksesVIP = it }
+            )
         }
 
-        // 4. Area Komponen Counter Tiket (Nanti akan di-hoist) - Statis
+        // 4. Area Komponen Counter Tiket (Interaktif dengan batas minimal 1)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -81,28 +96,32 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
         ) {
             Text(text = "Jumlah Tiket:", style = MaterialTheme.typography.bodyLarge)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Button(onClick = { }) { Text("-") }
-                Text(text = "1", modifier = Modifier.padding(horizontal = 16.dp))
-                Button(onClick = { }) { Text("+") }
+                // Tombol minus tidak bisa mengurangi di bawah 1
+                Button(onClick = { if (jumlahTiket > 1) jumlahTiket-- }) { Text("-") }
+
+                Text(text = jumlahTiket.toString(), modifier = Modifier.padding(horizontal = 16.dp))
+
+                // Tombol plus
+                Button(onClick = { jumlahTiket++ }) { Text("+") }
             }
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 5. Tombol Aksi
+        // 5. Tombol Aksi (Logika menyusul di Hari 4)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = { },
+                onClick = { /* TODO Hari 4 */ },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Reset")
             }
 
             Button(
-                onClick = { },
+                onClick = { /* TODO Hari 4 */ },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Daftar")
