@@ -45,6 +45,14 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
     var aksesVIP by remember { mutableStateOf(false) }
     var jumlahTiket by remember { mutableIntStateOf(1) }
 
+    // --- STATE HARI 4 (Feedback Pendaftaran) ---
+    var pesanFeedback by remember { mutableStateOf("") }
+
+    // --- LOGIKA VALIDASI HARI 4 ---
+    // Tombol hanya aktif jika nama tidak kosong DAN email mengandung '@'
+    val isFormValid = namaPeserta.isNotBlank() && emailPeserta.contains("@")
+
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -63,7 +71,10 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
         // 2. Input Teks (Sekarang Interaktif membaca & mengubah State)
         OutlinedTextField(
             value = namaPeserta,
-            onValueChange = { namaPeserta = it },
+            onValueChange = {
+                namaPeserta = it
+                pesanFeedback = ""
+                            },
             label = { Text("Nama Lengkap") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -72,7 +83,8 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
             value = emailPeserta,
             onValueChange = { emailPeserta = it },
             label = { Text("Alamat Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = emailPeserta.isNotEmpty() && !emailPeserta.contains("@")
         )
 
         // 3. Area Switch VIP (Interaktif)
@@ -106,6 +118,15 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
             }
         }
 
+        if (pesanFeedback.isNotEmpty()) {
+            Text(
+                text = pesanFeedback,
+               // color = if (isFormValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
         Spacer(modifier = Modifier.weight(1f))
 
         // 5. Tombol Aksi (Logika menyusul di Hari 4)
@@ -114,15 +135,24 @@ fun EventRegistrationScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = { /* TODO Hari 4 */ },
+                onClick = {
+                    namaPeserta = ""
+                    emailPeserta = ""
+                    aksesVIP = false
+                    jumlahTiket = 1
+                    pesanFeedback = ""
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Reset")
             }
 
             Button(
-                onClick = { /* TODO Hari 4 */ },
-                modifier = Modifier.weight(1f)
+                onClick = {
+                    pesanFeedback = "Pendaftaran Berhasil untuk $namaPeserta!"
+                },
+                modifier = Modifier.weight(1f),
+                enabled = isFormValid
             ) {
                 Text("Daftar")
             }
